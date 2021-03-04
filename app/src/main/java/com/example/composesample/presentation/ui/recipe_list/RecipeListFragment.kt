@@ -15,6 +15,7 @@ import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
@@ -25,6 +26,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
 import com.example.composesample.R
+import com.example.composesample.presentation.components.FoodCategoryChip
 import com.example.composesample.presentation.components.RecipeCard
 import com.example.composesample.util.TAG
 import dagger.hilt.android.AndroidEntryPoint
@@ -49,7 +51,7 @@ class RecipeListFragment : Fragment() {
                     Surface(
                         modifier = Modifier
                             .fillMaxWidth(),
-                        color = MaterialTheme.colors.primary,
+                        color = Color.White,
                         elevation = 8.dp
                     ) {
                         Column {
@@ -91,11 +93,12 @@ class RecipeListFragment : Fragment() {
                                 modifier = Modifier.fillMaxWidth()
                             ) {
                                 for (category in getAllFoodCategories()) {
-                                    Text(
-                                        text = category.value,
-                                        style = MaterialTheme.typography.body2,
-                                        color = MaterialTheme.colors.secondary,
-                                        modifier = Modifier.padding(8.dp)
+                                    FoodCategoryChip(
+                                        category = category.value,
+                                        onExecuteSearch = {
+                                            viewModel.onQueryChanged(it)
+                                            viewModel.newSearch(it)
+                                        }
                                     )
                                 }
                             }
