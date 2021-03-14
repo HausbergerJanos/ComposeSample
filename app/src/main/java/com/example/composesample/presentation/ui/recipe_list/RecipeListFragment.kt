@@ -27,10 +27,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
 import com.example.composesample.R
-import com.example.composesample.presentation.components.CircularIndeterminateProgressBar
-import com.example.composesample.presentation.components.FoodCategoryChip
-import com.example.composesample.presentation.components.RecipeCard
-import com.example.composesample.presentation.components.SearchAppBar
+import com.example.composesample.presentation.components.*
 import com.example.composesample.util.TAG
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -65,19 +62,21 @@ class RecipeListFragment : Fragment() {
                         onChangeCategoryScrollPosition = viewModel::onChangeCategoryScrollPosition
                     )
 
-                    Box(
-                        modifier = Modifier.fillMaxSize()
-                    ) {
-                        LazyColumn {
-                            itemsIndexed(
-                                items = recipes
-                            ) { index, recipe ->
-                                RecipeCard(recipe = recipe, onClick = {})
-                            }
-                        }
+                    PulsingDemo()
 
-                        CircularIndeterminateProgressBar(isDisplayed = loading)
-                    }
+//                    Box(
+//                        modifier = Modifier.fillMaxSize()
+//                    ) {
+//                        LazyColumn {
+//                            itemsIndexed(
+//                                items = recipes
+//                            ) { index, recipe ->
+//                                RecipeCard(recipe = recipe, onClick = {})
+//                            }
+//                        }
+//
+//                        CircularIndeterminateProgressBar(isDisplayed = loading)
+//                    }
                 }
             }
         }
