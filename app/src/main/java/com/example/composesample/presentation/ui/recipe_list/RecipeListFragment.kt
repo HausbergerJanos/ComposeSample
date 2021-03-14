@@ -27,6 +27,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
 import com.example.composesample.R
+import com.example.composesample.presentation.components.CircularIndeterminateProgressBar
 import com.example.composesample.presentation.components.FoodCategoryChip
 import com.example.composesample.presentation.components.RecipeCard
 import com.example.composesample.presentation.components.SearchAppBar
@@ -51,6 +52,8 @@ class RecipeListFragment : Fragment() {
 
                 val selectedCategory = viewModel.selectedCategory.value
 
+                val loading = viewModel.loading.value
+
                 Column {
                     SearchAppBar(
                         query = query,
@@ -62,12 +65,18 @@ class RecipeListFragment : Fragment() {
                         onChangeCategoryScrollPosition = viewModel::onChangeCategoryScrollPosition
                     )
 
-                    LazyColumn {
-                        itemsIndexed(
-                            items = recipes
-                        ) { index, recipe ->
-                            RecipeCard(recipe = recipe, onClick = {})
+                    Box(
+                        modifier = Modifier.fillMaxSize()
+                    ) {
+                        LazyColumn {
+                            itemsIndexed(
+                                items = recipes
+                            ) { index, recipe ->
+                                RecipeCard(recipe = recipe, onClick = {})
+                            }
                         }
+
+                        CircularIndeterminateProgressBar(isDisplayed = loading)
                     }
                 }
             }
