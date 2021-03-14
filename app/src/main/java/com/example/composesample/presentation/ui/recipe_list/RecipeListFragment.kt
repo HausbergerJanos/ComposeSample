@@ -28,6 +28,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
 import com.example.composesample.R
 import com.example.composesample.presentation.components.*
+import com.example.composesample.presentation.components.HeartAnimDefinition.HeartButtonState.*
 import com.example.composesample.util.TAG
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -62,7 +63,23 @@ class RecipeListFragment : Fragment() {
                         onChangeCategoryScrollPosition = viewModel::onChangeCategoryScrollPosition
                     )
 
-                    PulsingDemo()
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(200.dp),
+                        horizontalArrangement = Arrangement.Center
+                    ) {
+                        val state = remember { mutableStateOf(IDLE) }
+                        AnimatedHearthButton(
+                            modifier = Modifier,
+                            buttonState = state,
+                            onToggle = {
+                                state.value = if (state.value == IDLE) ACTIVE else IDLE
+                            }
+                        )
+                    }
+
+                    //PulsingDemo()
 
 //                    Box(
 //                        modifier = Modifier.fillMaxSize()
