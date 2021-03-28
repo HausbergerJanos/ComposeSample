@@ -31,13 +31,19 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
 import com.example.composesample.R
+import com.example.composesample.presentation.BaseApplication
 import com.example.composesample.presentation.components.*
 import com.example.composesample.presentation.components.HeartAnimDefinition.HeartButtonState.*
+import com.example.composesample.presentation.theme.AppTheme
 import com.example.composesample.util.TAG
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class RecipeListFragment : Fragment() {
+
+    @Inject
+    lateinit var application: BaseApplication
 
     val viewModel: RecipeListViewModel by viewModels()
 
@@ -48,43 +54,53 @@ class RecipeListFragment : Fragment() {
     ): View {
         return ComposeView(requireContext()).apply {
             setContent {
-                val recipes = viewModel.recipes.value
 
-                val query = viewModel.query.value
+                AppTheme(
+                    darkTheme = application.isDark.value
+                ) {
+                    val recipes = viewModel.recipes.value
 
-                val selectedCategory = viewModel.selectedCategory.value
+                    val query = viewModel.query.value
 
-                val loading = viewModel.loading.value
+                    val selectedCategory = viewModel.selectedCategory.value
 
-                Column {
-                    SearchAppBar(
-                        query = query,
-                        onQueryChanged = viewModel::onQueryChanged,
-                        onExecuteSearch = viewModel::newSearch,
-                        scrollPosition = viewModel.categoryScrollPosition,
-                        selectedCategory = selectedCategory,
-                        onSelectedCategoryChanged = viewModel::onSelectedCategoryChanged,
-                        onChangeCategoryScrollPosition = viewModel::onChangeCategoryScrollPosition
-                    )
+                    val loading = viewModel.loading.value
 
-                    Box(
-                        modifier = Modifier.fillMaxSize()
-                    ) {
-                        if (loading) {
-                            LoadingRecipeListShimmer(imageHeight = 250.dp)
-                        } else {
-                            LazyColumn {
-                                itemsIndexed(
-                                    items = recipes
-                                ) { index, recipe ->
-                                    RecipeCard(recipe = recipe, onClick = {})
+                    Column {
+                        SearchAppBar(
+                            query = query,
+                            onQueryChanged = viewModel::onQueryChanged,
+                            onExecuteSearch = viewModel::newSearch,
+                            scrollPosition = viewModel.categoryScrollPosition,
+                            selectedCategory = selectedCategory,
+                            onSelectedCategoryChanged = viewModel::onSelectedCategoryChanged,
+                            onChangeCategoryScrollPosition = viewModel::onChangeCategoryScrollPosition,
+                            onToggleTheme = {
+                                application.toggleLightTheme()
+                            }
+                        )
+
+                        Box(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .background(color = MaterialTheme.colors.background),
+                        ) {
+                            if (loading) {
+                                LoadingRecipeListShimmer(imageHeight = 250.dp)
+                            } else {
+                                LazyColumn {
+                                    itemsIndexed(
+                                        items = recipes
+                                    ) { index, recipe ->
+                                        RecipeCard(recipe = recipe, onClick = {})
+                                    }
                                 }
                             }
-                        }
 
-                        CircularIndeterminateProgressBar(
-                            isDisplayed = loading
-                        )
+                            CircularIndeterminateProgressBar(
+                                isDisplayed = loading
+                            )
+                        }
                     }
                 }
             }
@@ -102,17 +118,17 @@ fun GradientDemo() {
 
     val brush = linearGradient(
         colors = colors,
-        start = Offset(200f,200f),
+        start = Offset(200f, 200f),
         end = Offset(400f, 400f)
     )
-    
+
     Surface(
         shape = MaterialTheme.shapes.small
     ) {
-       Spacer(
-           modifier = Modifier
-               .fillMaxSize()
-               .background(brush)
-       )
+        Spacer(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(brush)
+        )
     }
 }
